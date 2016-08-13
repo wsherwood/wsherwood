@@ -49,8 +49,12 @@ ul{
 .panel{
 	border-radius: 3px;
 	border-color: white;
+	min-width: 150px;
+	max-width: 250px;
+	width: 250px;
+
 }
 
 .red .panel{
-	background-color: rgb(200,170,170);
+	background-color: rgb(220,170,170);
 }
