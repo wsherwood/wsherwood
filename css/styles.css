@@ -11,11 +11,6 @@ header,body,footer{
 	border-style: solid;
 }
 
-header.h1{ 
-	text-transform: uppercase;
-	letter-spacing: 0.4em;
-}
-
 body{
 	float: none;
 	left: 30%;
@@ -24,4 +19,38 @@ body{
 
 ul{
 	list-style-type: none;
+}
+
+/*------------ untested -------------*/
+
+.header .h1{ 
+	text-transform: uppercase;
+	letter-spacing: 0.4em;
+}
+
+.header_nav{
+	display: block;
+	width: 100%;
+	float: top;
+}
+
+/*---------- OO styled selector ------*/
+.boxed{
+	border-style: solid;
+	border: 2px;
+	margin: 3px;
+}
+
+.main_content_panels{
+	border-radius: 5px;
+	background-color: rgb(220,220,220);
+}
+
+.panel{
+	border-radius: 3px;
+	border-color: white;
+}
+
+.red .panel{
+	background-color: rgb(200,170,170);
 }
