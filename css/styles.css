@@ -1,18 +1,25 @@
 header{
-	float: left;
+	float: top;
 	color: blue;
-	background-color: blue;
+	width: 100%;
+	background-color: white;
 
 }
-header.h1{
+
+header,body,footer{
+	border: 1px;
+	border-style: solid;
+}
+
+header.h1{ 
 	text-transform: uppercase;
-	letter-spacing: 0.1em;
+	letter-spacing: 0.4em;
 }
 
 body{
 	float: none;
 	left: 30%;
-	
+
 }
 
 ul{
