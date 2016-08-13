@@ -1,3 +1,20 @@
+header{
+	float: left;
+	color: blue;
+	background-color: blue;
+
+}
+header.h1{
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+}
+
+body{
+	float: none;
+	left: 30%;
+	
+}
+
 ul{
 	list-style-type: none;
 }
