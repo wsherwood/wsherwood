@@ -23,7 +23,7 @@ ul{
 
 /*------------ untested -------------*/
 
-.header .h1{ 
+.header h1{ 
 	text-transform: uppercase;
 	letter-spacing: 0.4em;
 }
@@ -55,6 +55,10 @@ ul{
 
 }
 
-.red .panel{
+.red.panel{
 	background-color: rgb(220,170,170);
+}
+
+.blue.panel{
+
 }
