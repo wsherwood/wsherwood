@@ -1,12 +1,4 @@
-header{
-	float: top;
-	color: blue;
-	width: 100%;
-	background-color: white;
-
-}
-
-header,body,footer{
+header,body{
 	border: 1px;
 	border-style: solid;
 }
@@ -14,7 +6,21 @@ header,body,footer{
 body{
 	float: none;
 	left: 30%;
+}
 
+footer{
+    float: bottom;
+}
+
+footer ul{
+    width: 50%;
+    margin: auto;
+}
+
+footer ul li{
+    float: bottom;
+    text-align: center;
+    
 }
 
 ul{
@@ -22,17 +28,30 @@ ul{
 }
 
 /*------------ untested -------------*/
-
-.header h1{ 
+header{ 
 	text-transform: uppercase;
 	letter-spacing: 0.4em;
+    background-color: antiquewhite;
+    text-decoration: none;
 }
 
-.header_nav{
-	display: block;
-	width: 100%;
-	float: top;
+header h1{
+    float: left;
+    margin: auto;
+    padding: 0px;
+    this is bullshit
 }
+
+.header_nav ul{
+    float: clear;
+}
+.header_nav li{
+    display: inline;
+}
+.header_nav a{
+    text-decoration: none;
+}
+
 
 /*---------- OO styled selector ------*/
 .boxed{
@@ -41,9 +60,16 @@ ul{
 	margin: 3px;
 }
 
-.main_content_panels{
+.main .content{
 	border-radius: 5px;
 	background-color: rgb(220,220,220);
+	width: 90%;
+	margin: auto;
+    box-shadow: 0px 20px 30px #555;
+}
+
+.main.content.panels{
+	margin: 25px;
 }
 
 .panel{
@@ -52,6 +78,7 @@ ul{
 	min-width: 150px;
 	max-width: 250px;
 	width: 250px;
+	text-align: center;
 
 }
 
@@ -60,5 +87,9 @@ ul{
 }
 
 .blue.panel{
+	background-color: rgb(170,170,220);
+}
 
+.blue.panel{
+	background-color: rgb(170,220,170);
 }

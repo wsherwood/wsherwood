@@ -4,15 +4,27 @@
 		"selected_items":
 		[
 			[
+				"mari",
+				"margin"
+			],
+			[
+				"max",
+				"max-width"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"bo",
+				"border-radius"
+			],
+			[
 				"border",
 				"border-style"
 			],
 			[
 				"bor",
-				"border-style"
-			],
-			[
-				"bo",
 				"border-style"
 			],
 			[
@@ -27,7 +39,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 2027,
+				"buffer_size": 2416,
 				"line_ending": "Windows"
 			}
 		},
@@ -35,7 +47,7 @@
 			"file": "CSS/styles.css",
 			"settings":
 			{
-				"buffer_size": 270,
+				"buffer_size": 905,
 				"line_ending": "Windows",
 				"name": "main.css"
 			}
@@ -111,7 +123,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 1,
 			"sheets":
 			[
 				{
@@ -120,15 +132,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2027,
+						"buffer_size": 2416,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1752,
-								1752
+								716,
+								716
 							]
 						],
 						"settings":
@@ -138,10 +150,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 163.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
@@ -150,15 +162,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 270,
+						"buffer_size": 905,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								244,
-								244
+								616,
+								616
 							]
 						],
 						"settings":
@@ -167,10 +179,10 @@
 							"syntax": "Packages/CSS/CSS.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 277.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
