@@ -1,26 +1,20 @@
-header,body{
-	border: 1px;
-	border-style: solid;
+* { box-sizing: border-box; }
+
+body {
+    direction: ltr;
 }
 
-body{
-	float: none;
-	left: 30%;
-}
-
-footer{
-    float: bottom;
+#background_div {
+    background-color: darkslateblue;
+    
 }
 
 footer ul{
-    width: 50%;
-    margin: auto;
 }
 
 footer ul li{
     float: bottom;
-    text-align: center;
-    
+    text-align: center;   
 }
 
 ul{
@@ -33,51 +27,52 @@ header{
 	letter-spacing: 0.4em;
     background-color: antiquewhite;
     text-decoration: none;
+    display: flex;
+    justify-content: space-around;
+    align-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    width: 100%;
 }
 
 header h1{
-    float: left;
-    margin: auto;
     padding: 0px;
-    this is bullshit
+    margin-left:right;
+    flex: 2;
 }
 
-.header_nav ul{
-    float: clear;
+nav {
+    flex: 3;
 }
-.header_nav li{
+
+nav ul{
+}
+nav li{
     display: inline;
 }
-.header_nav a{
+nav a{
     text-decoration: none;
 }
 
 
 /*---------- OO styled selector ------*/
-.boxed{
-	border-style: solid;
-	border: 2px;
-	margin: 3px;
-}
+
 
 .main .content{
 	border-radius: 5px;
 	background-color: rgb(220,220,220);
-	width: 90%;
+	width: 66.66%;
 	margin: auto;
+    display: flex;
     box-shadow: 0px 20px 30px #555;
 }
 
-.main.content.panels{
+.main .content .panels{
 	margin: 25px;
 }
 
 .panel{
-	border-radius: 3px;
-	border-color: white;
-	min-width: 150px;
-	max-width: 250px;
-	width: 250px;
+    flex: 1;
 	text-align: center;
 
 }

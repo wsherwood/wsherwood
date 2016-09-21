@@ -39,7 +39,7 @@
 			"file": "index.html",
 			"settings":
 			{
-				"buffer_size": 2416,
+				"buffer_size": 2320,
 				"line_ending": "Windows"
 			}
 		},
@@ -47,7 +47,7 @@
 			"file": "CSS/styles.css",
 			"settings":
 			{
-				"buffer_size": 905,
+				"buffer_size": 1205,
 				"line_ending": "Windows",
 				"name": "main.css"
 			}
@@ -132,15 +132,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2416,
+						"buffer_size": 2320,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								716,
-								716
+								0,
+								0
 							]
 						],
 						"settings":
@@ -162,15 +162,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 905,
+						"buffer_size": 1205,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								616,
-								616
+								0,
+								0
 							]
 						],
 						"settings":
