@@ -5,86 +5,18 @@
     <title>Breakout</title>
     <style>
         * {padding: 0; margin: 0; }
-        canvas {background: #000; display: block; margin: 0 auto; }
+        section {margin: 0 auto; width: 600px;}
+        canvas {display: block;}
+        #player {background-color: rgba(128,128,128,0.5);}
+        #invader {background-color: rgba(128,128,180,0.5);}
     </style>
 </head>
 
 <body onload="init()">
-<canvas id="background" height="360" width="600"></canvas>
-<!--
-<canvas id="breakoutCanvas" width="480" height="320"></canvas>
-
-/*<script>
-    var canvas = document.getElementById("breakoutCanvas");
-    var ctx = canvas.getContext("2d");
-    var ballRadius = 10;
-    var x = canvas.width/2;
-    var y = canvas.height/2;
-    var dx = 2;
-    var dy = -1;
-    
-    var paddle = (function() {
-        var width = 75;
-        var height = 15;
-        var pX = 0;
-        var pY = canvas.height - this.height;
-        
-        function move(xVal) {
-            pX += xVal;
-        }
-        return {
-            moveLeft: function(){
-                move(-1);
-            },
-            moveRight: function(){
-                move(1);
-            },
-            posX: function(){
-                return pX;
-            },
-            posY: function(){
-                return pY;
-            },
-            draw(c): function(c)(){
-                c.beginPath();
-                c.fillStyle = "#09d";
-                c.fillRect(pX, pY, width, height);
-                c.closePath;
-                return;
-            }
-        };
-    })();
-    
-    console.log( paddle );
-    
-    function drawBall( c ) {
-        c.beginPath();
-        c.arc( x, y, ballRadius, 0, Math.PI * 2);
-        c.fillStyle = "#09d";
-        c.fill();
-        c.closePath();
-    }
-    
-    function draw() {
-        ctx.clearRect(0,0, canvas.width, canvas.height);
-        drawBall( ctx );
-        paddle.draw( ctx );
-        x += dx;
-        y += dy;
-        
-        if( x > canvas.width - ballRadius || x < ballRadius ) {
-            dx = -dx;
-        }
-        
-        if( y > canvas.height - ballRadius || y < ballRadius ) {
-            dy = -dy;
-        }
-    }
-    
-    setInterval(draw, 32); ->
-</script>
--->    
+    <section id="viewport">
+        <canvas id="background" height="360" width="600"></canvas>
+    </section>
 </body>
-        <script type="text/javascript" src="js/breakout.js"></script>
+<script type="text/javascript" src="js/breakout.js"></script>
 
 </html>
