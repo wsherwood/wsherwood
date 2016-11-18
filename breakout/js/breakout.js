@@ -24,6 +24,7 @@ function animate() {
         window.requestAnimFrame(animate);
         game.background.draw();
         game.player.draw();
+        game.InvaderCollection.draw();
     }
 }
 
@@ -143,6 +144,37 @@ function Player() { //inherits from drawable
 }
 Player.prototype = new Drawable();
 
+function Invader() {
+    'use strict';
+    this.speed = 25;
+    this.isLeft = false;
+    this.isRight = true;
+    
+    this.draw = function () {
+        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.context.drawImage(imageRepo.invader, this.x, this.y);
+    };
+    //
+}
+Invader.prototype = new Drawable();
+
+function generateInvaders() {
+    'use strict';
+    var invArr = [],
+        i = 0;
+    invArr.length = 10;
+    
+    invArr.forEach(function (invader) {
+        invader = new Invader();
+        invader.init(i * 90, i % 7 * 90);
+        invader.id = 'inv' + i;
+    });
+    
+    
+    return invArr;
+}
+
+
 /***
  * Game object. Holds the objects and data for the game.
  */
@@ -157,6 +189,7 @@ function Game() {
     this.height = null;
     this.background = null;
     this.player = null;
+    this.InvaderCollection = [];
     this.init = function () {
         
         //Grab the canvas element
@@ -208,6 +241,11 @@ function Game() {
             this.player = new Player();
             this.player.init(0, 0);
             
+            Invader.prototype.context = this.invaderContext;
+            Invader.prototype.canvasWidth = this.width;
+            Invader.prototype.canvasHeight = this.height;
+            
+            this.InvaderCollection = generateInvaders();
             return true;
         } else {
             return false;
