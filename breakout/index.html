@@ -7,14 +7,14 @@
         * {padding: 0; margin: 0; }
         section {margin: 0 auto; width: 600px;}
         canvas {display: block;}
-        #player {background-color: rgba(128,128,128,0.5);}
-        #invader {background-color: rgba(128,128,180,0.5);}
+        #playerCanvas {background-color: rgba(128,128,128,0.5); position: relative; top: -64px;}
+        #invaderCanvas {background-color: rgba(128,128,180,0.5); position: relative; top: -764px;}
     </style>
 </head>
 
 <body onload="init()">
     <section id="viewport">
-        <canvas id="background" height="360" width="600"></canvas>
+        <canvas id="background" height="700" width="600"></canvas>
     </section>
 </body>
 <script type="text/javascript" src="js/breakout.js"></script>

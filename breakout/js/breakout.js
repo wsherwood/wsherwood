@@ -1,31 +1,64 @@
 /***
- * Start Game
+ * requestAnim shim by Paul Irish
+ * Finds the first API that works to optimize the animation
  */
-var game = new Game();
+window.requestAnimFrame = (function () {
+    'use strict';
+    return window.requestAnimationFrame    ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        window.oRequestAnimationFrame      ||
+        window.msRequestAnimationFrame     ||
+        function (callback, element) {
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
 
-function init() {
-    if (game.init()) {
-        game.start();
+var game;
+/***
+ * Animation loop.
+ */
+function animate() {
+    'use strict';
+    if (typeof game !== undefined) {
+        window.requestAnimFrame(animate);
+        game.background.draw();
+        game.player.draw();
     }
 }
+
 
 /**
   * Image repo. Load in all the graphical assest initially
   * in order to lower the overhead during the game.
   * Is a singleton pattern...
   */
-var imageRepo = new function () {
+function ImgRepo() {
+    'use strict';
+    
+    var empty,
+        background,
+        player,
+        invader;
+    
     //Background property
-    this.empty = null;
-    this.background = new Image();
-    this.player = new Image();
-    this.invader = new Image();
+    empty = null;
+    background = new Image();
+    player = new Image();
+    invader = new Image();
     
     //Source file
-    this.background.src = "../img/bg.png";
-    this.player.src = "../img/ship.png";
-    this.invader.src = "../img/invader.png";
+    background.src = "../img/bg.png";
+    player.src = "../img/ship.png";
+    invader.src = "../img/invader.png";
+        
+    function addImg(imgName, srcPath) {
+        ImgRepo[imgName.toString()] = new Image();
+        ImgRepo[imgName.toString()].src = srcPath.toString();
+    }
 }
+
+var imageRepo = new ImgRepo();
 
 /**
  * Drawable object prototype. The effective 'base' class
@@ -33,20 +66,20 @@ var imageRepo = new function () {
  * element.
  */
 function Drawable() {
+    'use strict';
     //Constructor
     this.init = function (posX, posY) {
         //Default variables
         this.x = posX;
         this.y = posY;
-    }
+    };
     this.speed = 0;
     this.canvasWidth = 0;
     this.canvasHeight = 0;
     this.id = null;
     
     //Abstract fucntion to be overridden.
-    this.draw = function () {
-    };
+    this.draw = function () {};
 }
 
 /** 
@@ -54,6 +87,7 @@ function Drawable() {
  * drawn on it's own canvas.
  */
 function Background() {
+    'use strict';
     this.speed = 1; // move speed in px
     
     //Implementation of the draw code
@@ -61,11 +95,11 @@ function Background() {
         this.y += this.speed;
         this.context.drawImage(imageRepo.background, this.x, this.y);
         //Draw a dupelicate image on top for the infinite scrolling effect
-        this.context.drawImage(imageRepo.background, this.x, this.y - this.canvasHeight);
+        //this.context.drawImage(imageRepo.background, this.x, this.y - this.canvasHeight);
         
         //When the image gets scrolled off the screen. Move it to the top.
-        if (this.y >= this.canvasHeight) { 
-            this.y = 0; 
+        if (this.y >= this.canvasHeight) {
+            this.y = 0;
         }
     };
 }
@@ -74,6 +108,7 @@ function Background() {
 Background.prototype = new Drawable();
 
 function Player() { //inherits from drawable
+    'use strict';
     this.speed = 1;
     this.isLeft = false;
     this.isRight = false;
@@ -85,24 +120,31 @@ function Player() { //inherits from drawable
         }
         
         if (this.isRight) {
-            
+            this.x += this.speed;
         }
+        
+        this.context.clearRect(this.x - 1, this.y, this.x + 64 + 1, 64);
+        this.context.drawImage(imageRepo.player, this.x, this.y);
     };
-} Player.prototype = new Drawable();
+    
+}
+Player.prototype = new Drawable();
 
 /***
  * Game object. Holds the objects and data for the game.
  */
 function Game() {
+    'use strict';
     /*
      * Constructor gets canvas information and context. 
      * Returns true if canvas is supported else false,
      * halting the script.
      */
-    this.width;
-    this.height;
-    
-    this.init = function() {
+    this.width = null;
+    this.height = null;
+    this.background = null;
+    this.player = null;
+    this.init = function () {
         
         //Grab the canvas element
         this.bgCanvas = document.getElementById('background');
@@ -111,21 +153,21 @@ function Game() {
         this.bgCanvas.setAttribute('Z-INDEX', 1);
         
         this.playerCanvas = document.createElement('CANVAS');
-        this.playerCanvas.setAttribute('WIDTH',this.width);
-        this.playerCanvas.setAttribute('HEIGHT',64);
-        this.playerCanvas.setAttribute('ID', 'player');
+        this.playerCanvas.setAttribute('WIDTH', Game.width);
+        this.playerCanvas.setAttribute('HEIGHT', 64);
+        this.playerCanvas.setAttribute('ID', 'playerCanvas');
         this.bgCanvas.setAttribute('Z-INDEX', 2);
         
         this.invaderCanvas = document.createElement('CANVAS');
-        this.invaderCanvas.setAttribute('WIDTH',this.width);
-        this.invaderCanvas.setAttribute('HEIGHT',this.height);
-        this.invaderCanvas.setAttribute('ID', 'invader');
+        this.invaderCanvas.setAttribute('WIDTH', Game.width);
+        this.invaderCanvas.setAttribute('HEIGHT', Game.height);
+        this.invaderCanvas.setAttribute('ID', 'invaderCanvas');
         this.bgCanvas.setAttribute('Z-INDEX', 2);
 
         
         //Append the player canvas
         document.getElementById('viewport').appendChild(this.playerCanvas);
-        
+           
         //Append the invader canvas
         document.getElementById('viewport').appendChild(this.invaderCanvas);
         
@@ -134,24 +176,24 @@ function Game() {
             
             this.bgContext = this.bgCanvas.getContext('2d');
             this.playerContext = this.playerCanvas.getContext('2d');
-            this.invaderCanvas = this.invaderCanvas.getContext('2d');
+            this.invaderContext = this.invaderCanvas.getContext('2d');
             
             //Init the objects to contain their context and canvas info
             Background.prototype.context = this.bgContext;
             Background.prototype.canvasWidth = this.bgCanvas.width;
-            Background.prototype.canvasHeight= this.bgCanvas.height;
+            Background.prototype.canvasHeight = this.bgCanvas.height;
             
             
             //Creat the new background object.
             this.background = new Background();
-            this.background.init(0,0);
+            this.background.init(0, 0);
             
             Player.prototype.context = this.playerContext;
             Player.prototype.canvasWidth = this.playerCanvas.width;
             Player.prototype.canvasHeight = this.playerCanvas.height;
             
             this.player = new Player();
-            this.player.init(0,0);
+            this.player.init(0, 0);
             
             return true;
         } else {
@@ -159,32 +201,59 @@ function Game() {
         }
     };
     
-    this.start = function() {
+    this.start = function () {
         animate();
     };
 }
 
-
-/***
- * Animation loop.
+/**
+ * Game start
  */
-function animate() {
-    requestAnimFrame( animate );
-    game.background.draw();
-    game.player.draw();
+game = new Game();
+
+function init() {
+    'use strict';
+    if (game.init()) {
+        game.start();
+    }
 }
 
-/***
- * requestAnim shim by Paul Irish
- * Finds the first API that works to optimize the animation
+
+/*****
+ * Event logic
  */
-window.requestAnimFrame = (function () {
-    return window.requestAnimationFrame    ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        window.oRequestAnimationFrame      ||
-        window.msRequestAnimationFrame     ||
-        function( callback, element ) {
-            window.setTimeout( callback, 1000/60 );
-        };
-})();
+function keyDownHandler(e) {
+    'use strict';
+    var rightKey = "ArrowRight",
+        leftKey  = "ArrowLeft";
+    
+    // Exits the function if it's repeated
+    if (e.repeat) { return; }
+    
+    if (e.key === rightKey) {
+        game.player.isRight = true;
+    }
+    
+    if (e.key === leftKey) {
+        game.player.isLeft = true;
+    }
+}
+
+function keyUpHandler(e) {
+    'use strict';
+    var rightKey = "ArrowRight",
+        leftKey = "ArrowLeft";
+    
+    if (e.key === rightKey) {
+        game.player.isRight = false;
+    }
+    
+    if (e.key === leftKey) {
+        game.player.isLeft = false;
+    }
+}
+
+//Action listener
+//set Action listeners
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
