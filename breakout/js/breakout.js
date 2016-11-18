@@ -33,32 +33,41 @@ function animate() {
   * in order to lower the overhead during the game.
   * Is a singleton pattern...
   */
-function ImgRepo() {
+var imageRepo = (function () {
     'use strict';
-    
-    var empty,
-        background,
-        player,
-        invader;
+    var empty = null,
+        bg = new Image(),
+        py = new Image(),
+        inv = new Image();
     
     //Background property
-    empty = null;
-    background = new Image();
-    player = new Image();
-    invader = new Image();
     
     //Source file
-    background.src = "../img/bg.png";
-    player.src = "../img/ship.png";
-    invader.src = "../img/invader.png";
-        
-    function addImg(imgName, srcPath) {
-        ImgRepo[imgName.toString()] = new Image();
-        ImgRepo[imgName.toString()].src = srcPath.toString();
-    }
-}
+    bg.src = "../img/bg.png";
+    py.src = "../img/ship.png";
+    inv.src = "../img/invader.png";
 
-var imageRepo = new ImgRepo();
+    
+    function addImg(imgName, srcPath) {
+        imageRepo[imgName.toString()] = new Image();
+        imageRepo[imgName.toString()].src = srcPath.toString();
+    }
+    
+    return { // public interface
+        background: bg,
+        player: py,
+        invader: inv,
+        getImage: function (name) {
+            if (imageRepo[name]) {
+                return imageRepo[name];
+            }
+        },
+        add: function (name, src) {
+            addImg(name, src);
+            return;
+        }
+    };
+})();
 
 /**
  * Drawable object prototype. The effective 'base' class
@@ -86,7 +95,7 @@ function Drawable() {
  * Concrete background class object. Inherits from drawable
  * drawn on it's own canvas.
  */
-function Background() {
+function Background() { //inherits from drawable
     'use strict';
     this.speed = 1; // move speed in px
     
@@ -95,7 +104,11 @@ function Background() {
         this.y += this.speed;
         this.context.drawImage(imageRepo.background, this.x, this.y);
         //Draw a dupelicate image on top for the infinite scrolling effect
-        //this.context.drawImage(imageRepo.background, this.x, this.y - this.canvasHeight);
+        // TODO: CHANGE THE BACKGROUND SCROLLING LOGIC. 
+        // PERHAPS CREATE A SCROLLABLE PROTOTYPE AS WELL AS A METHOD FOR WINDOW RESIZE
+        this.context.drawImage(imageRepo.background, this.x, this.y - imageRepo.background.height);
+        this.context.drawImage(imageRepo.background, this.x, this.y - 2 * imageRepo.background.height);
+        this.context.drawImage(imageRepo.background, this.x, this.y + imageRepo.background.height);
         
         //When the image gets scrolled off the screen. Move it to the top.
         if (this.y >= this.canvasHeight) {
@@ -123,7 +136,7 @@ function Player() { //inherits from drawable
             this.x += this.speed;
         }
         
-        this.context.clearRect(this.x - 1, this.y, this.x + 64 + 1, 64);
+        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.context.drawImage(imageRepo.player, this.x, this.y);
     };
     
@@ -153,14 +166,14 @@ function Game() {
         this.bgCanvas.setAttribute('Z-INDEX', 1);
         
         this.playerCanvas = document.createElement('CANVAS');
-        this.playerCanvas.setAttribute('WIDTH', Game.width);
+        this.playerCanvas.setAttribute('WIDTH', this.width);
         this.playerCanvas.setAttribute('HEIGHT', 64);
         this.playerCanvas.setAttribute('ID', 'playerCanvas');
         this.bgCanvas.setAttribute('Z-INDEX', 2);
         
         this.invaderCanvas = document.createElement('CANVAS');
-        this.invaderCanvas.setAttribute('WIDTH', Game.width);
-        this.invaderCanvas.setAttribute('HEIGHT', Game.height);
+        this.invaderCanvas.setAttribute('WIDTH', this.width);
+        this.invaderCanvas.setAttribute('HEIGHT', this.height);
         this.invaderCanvas.setAttribute('ID', 'invaderCanvas');
         this.bgCanvas.setAttribute('Z-INDEX', 2);
 
