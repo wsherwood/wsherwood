@@ -136,9 +136,18 @@ function Player() { //inherits from drawable
         if (this.isRight) {
             this.x += this.speed;
         }
-        
+        this.checkBounds();
         this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.context.drawImage(imageRepo.player, this.x, this.y);
+    };
+    
+    // Player boundry logic.
+    this.checkBounds = function () {
+        if (this.x <= 0) {
+            this.x = 0;
+        } else if (this.x + 64 >= this.canvasWidth) {
+            this.x = this.canvasWidth - 64;
+        }
     };
     
 }
@@ -154,25 +163,44 @@ function Invader() {
         this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.context.drawImage(imageRepo.invader, this.x, this.y);
     };
-    //
 }
 Invader.prototype = new Drawable();
 
-function generateInvaders() {
+function InvaderCollection() {
     'use strict';
-    var invArr = [],
-        i = 0;
-    invArr.length = 10;
+    this.speed = 10;
+    this.isLeft = false;
+    this.isRight = true;
+    this.instance = false;
     
-    invArr.forEach(function (invader) {
-        invader = new Invader();
-        invader.init(i * 90, i % 7 * 90);
-        invader.id = 'inv' + i;
-    });
+    function generateInvaders() {
+        if (InvaderCollection.instance) {
+            return InvaderCollection.invaders;
+        }
+        
+        var invArr = [],
+            i = 0;
+        invArr.length = 10;
+
+        for (i = 0; i < invArr.length; i += 1) {
+            invArr[i] = new Invader();
+            invArr[i].init(i * 90, i % 7 * 90);
+            invArr[i].id = 'inv' + i;
+        }
+        
+        InvaderCollection.instance = true;
+        return invArr;
+    }
+    this.invaders = generateInvaders();
     
+    this.draw = function () {
+        this.invaders.forEach(function (inv) {
+            inv.draw();
+        });
+    };
     
-    return invArr;
 }
+InvaderCollection.prototype = new Drawable();
 
 
 /***
@@ -189,7 +217,8 @@ function Game() {
     this.height = null;
     this.background = null;
     this.player = null;
-    this.InvaderCollection = [];
+    this.InvaderCollection = null;
+    
     this.init = function () {
         
         //Grab the canvas element
@@ -245,7 +274,9 @@ function Game() {
             Invader.prototype.canvasWidth = this.width;
             Invader.prototype.canvasHeight = this.height;
             
-            this.InvaderCollection = generateInvaders();
+            this.InvaderCollection = new InvaderCollection();
+            this.InvaderCollection.init(0, 0);
+            
             return true;
         } else {
             return false;
