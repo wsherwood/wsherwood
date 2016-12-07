@@ -48,9 +48,9 @@ var imageRepo = (function () {
     //Background property
     
     //Source file
-    bg.src = "../img/bg.png";
-    py.src = "../img/ship.png";
-    inv.src = "../img/invader2.png";
+    bg.src = "bg.png";
+    py.src = "ship.png";
+    inv.src = "invader2.png";
 
     
     function addImg(imgName, srcPath) {
