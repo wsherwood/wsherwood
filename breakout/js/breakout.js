@@ -173,24 +173,26 @@ Player.prototype = new Drawable();
 function Invader() {
     'use strict';
     this.speed = 1;
-    this.isLeft = false;
-    this.isRight = true;
     this.width = imageRepo.invader.width;
     
-        this.draw = function () {
-            try {
-                this.x += this.speed;
-                this.context.drawImage(imageRepo.invader, this.x, this.y);
-            } catch(err) {
-                console.log(err.message);
-            }
-        };
+    this.draw = function () {
+        try {
+            this.x += this.speed;
+            this.context.drawImage(imageRepo.invader, this.x, this.y);
+            this.checkBounds();
+        } catch (err) {
+            console.log(err.message);
+        }
+    };
     
     this.checkBounds = function () {
         if (this.x + this.width >= this.canvasWidth) {
-            game.InvaderCollection.changeDirection();
+            console.log(this);
+            game.InvaderCollection.change = true;
         } else if (this.x <= 0) {
-            game.InvaderCollection.changeDirection();
+            console.log(this);
+            this.x = 0;
+            game.InvaderCollection.change = true;
         }
     };
 }
@@ -199,9 +201,10 @@ Invader.prototype = new Drawable();
 function InvaderCollection() {
     'use strict';
     this.speed = 10;
-    this.isLeft = false;
     this.isRight = true;
     this.instance = false;
+    this.change = false;
+    var i = 0;
     
     this.generateInvaders = function () {
         if (InvaderCollection.instance) {
@@ -226,22 +229,22 @@ function InvaderCollection() {
     this.invaders = this.generateInvaders();
     
     this.draw = function () {
-        this.invaders.forEach(function (inv) {
-            game.invaderContext.clearRect(inv.x - 1, inv.y - 1, inv.width, inv.width);
-            inv.draw();
-            inv.checkBounds();
-        });
-        console.log("inv y: " + this.invaders[0].y);
+        game.invaderContext.clearRect(0, 0, game.invaderCanvas.width, game.invaderCanvas.height);
+        for (i = 0; i < this.invaders.length; i++) {
+            this.invaders[i].draw();
+        }
+        if (this.change) {
+            this.changeDirection();
+            this.change = false;
+        }
+        //inv.checkBounds();
     };
     
     this.changeDirection = function () {
-        this.invaders.forEach(function (inv) {
-            inv.isLeft = !inv.isLeft;
-            inv.isRight = !inv.isRight;
-            inv.speed = -1 * inv.speed;
-            inv.y += 1;
-        });
-        this.draw();
+        for (i = 0; i < this.invaders.length; i++) {
+            this.invaders[i].speed = -this.invaders[i].speed;
+            this.invaders[i].y += game.InvaderCollection.speed;
+        }
     };
     
 }
