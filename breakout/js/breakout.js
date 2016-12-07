@@ -227,7 +227,7 @@ function InvaderCollection() {
     
     this.draw = function () {
         this.invaders.forEach(function (inv) {
-            game.invaderContext.clearRect(inv.x, inv.y, inv.width, inv.width);
+            game.invaderContext.clearRect(inv.x - 1, inv.y - 1, inv.width, inv.width);
             inv.draw();
             inv.checkBounds();
         });
