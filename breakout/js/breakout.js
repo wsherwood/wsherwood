@@ -48,9 +48,9 @@ var imageRepo = (function () {
     //Background property
     
     //Source file
-    bg.src = "../img/bg.png";
-    py.src = "../img/ship.png";
-    inv.src = "../img/invader2.png";
+    bg.src = "bg.png";
+    py.src = "ship.png";
+    inv.src = "invader2.png";
 
     
     function addImg(imgName, srcPath) {
@@ -109,16 +109,20 @@ function Background() { //inherits from drawable
     
     //Implementation of the draw code
     this.draw = function () {
-        this.y += this.speed;
-        this.context.drawImage(imageRepo.background, this.x, this.y);
-        //Draw a dupelicate image on top for the infinite scrolling effect
-        // TODO: CHANGE THE BACKGROUND SCROLLING LOGIC. 
-        // PERHAPS CREATE A SCROLLABLE PROTOTYPE AS WELL AS A METHOD FOR WINDOW RESIZE
-        this.context.drawImage(imageRepo.background, this.x, this.y - imageRepo.background.height);
-        
-        //When the image gets scrolled off the screen. Move it to the top.
-        if (this.y >= this.canvasHeight) {
-            this.y = 0 - (imageRepo.background.height - this.canvasHeight); // This should work for any image size
+        try {
+            this.y += this.speed;
+            this.context.drawImage(imageRepo.background, this.x, this.y);
+            //Draw a dupelicate image on top for the infinite scrolling effect
+            // TODO: CHANGE THE BACKGROUND SCROLLING LOGIC. 
+            // PERHAPS CREATE A SCROLLABLE PROTOTYPE AS WELL AS A METHOD FOR WINDOW RESIZE
+            this.context.drawImage(imageRepo.background, this.x, this.y - imageRepo.background.height);
+
+            //When the image gets scrolled off the screen. Move it to the top.
+            if (this.y >= this.canvasHeight) {
+                this.y = 0 - (imageRepo.background.height - this.canvasHeight); // This should work for any image size
+            }
+        } catch (err) {
+            console.log(err.message);
         }
     };
 }
@@ -143,7 +147,11 @@ function Player() { //inherits from drawable
         }
         this.checkBounds();
         this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        this.context.drawImage(imageRepo.player, this.x, this.y);
+        try {
+            this.context.drawImage(imageRepo.player, this.x, this.y);
+        } catch (err) {
+            console.log(err.message);
+        }
     };
     
     // Shooting logic
@@ -165,20 +173,26 @@ Player.prototype = new Drawable();
 function Invader() {
     'use strict';
     this.speed = 1;
-    this.isLeft = false;
-    this.isRight = true;
     this.width = imageRepo.invader.width;
     
     this.draw = function () {
-        this.x += this.speed;
-        this.context.drawImage(imageRepo.invader, this.x, this.y);
+        try {
+            this.x += this.speed;
+            this.context.drawImage(imageRepo.invader, this.x, this.y);
+            this.checkBounds();
+        } catch (err) {
+            console.log(err.message);
+        }
     };
     
     this.checkBounds = function () {
         if (this.x + this.width >= this.canvasWidth) {
-            game.InvaderCollection.changeDirection();
+            console.log(this);
+            game.InvaderCollection.change = true;
         } else if (this.x <= 0) {
-            game.InvaderCollection.changeDirection();
+            console.log(this);
+            this.x = 0;
+            game.InvaderCollection.change = true;
         }
     };
 }
@@ -187,9 +201,10 @@ Invader.prototype = new Drawable();
 function InvaderCollection() {
     'use strict';
     this.speed = 10;
-    this.isLeft = false;
     this.isRight = true;
     this.instance = false;
+    this.change = false;
+    var i = 0;
     
     this.generateInvaders = function () {
         if (InvaderCollection.instance) {
@@ -214,22 +229,22 @@ function InvaderCollection() {
     this.invaders = this.generateInvaders();
     
     this.draw = function () {
-        this.invaders.forEach(function (inv) {
-            game.invaderContext.clearRect(inv.x, inv.y, inv.width, inv.width);
-            inv.draw();
-            inv.checkBounds();
-        });
-        console.log("inv y: " + this.invaders[0].y);
+        game.invaderContext.clearRect(0, 0, game.invaderCanvas.width, game.invaderCanvas.height);
+        for (i = 0; i < this.invaders.length; i++) {
+            this.invaders[i].draw();
+        }
+        if (this.change) {
+            this.changeDirection();
+            this.change = false;
+        }
+        //inv.checkBounds();
     };
     
     this.changeDirection = function () {
-        this.invaders.forEach(function (inv) {
-            inv.isLeft = !inv.isLeft;
-            inv.isRight = !inv.isRight;
-            inv.speed = -1 * inv.speed;
-            inv.y += 1;
-        });
-        this.draw();
+        for (i = 0; i < this.invaders.length; i++) {
+            this.invaders[i].speed = -this.invaders[i].speed;
+            this.invaders[i].y += game.InvaderCollection.speed;
+        }
     };
     
 }
