@@ -130,6 +130,23 @@ function Background() { //inherits from drawable
 //Set the background ot inherit properties from Drawable
 Background.prototype = new Drawable();
 
+function VertScan() {
+    'use strict';
+    this.speed = 0.01;
+    this.width = 40;
+    
+    this.draw = function () {
+        this.context.clearRect(Math.floor(this.x), 0, this.width, this.canvasHeight);
+    };
+    this.move = function () {
+        this.x += this.speed;
+        if (this.x > this.canvasWidth) {
+            this.x = 0;
+        }
+    };
+}
+VertScan.prototype = new Drawable();
+
 function Player() { //inherits from drawable
     'use strict';
     this.speed = 1;
@@ -187,11 +204,8 @@ function Invader() {
     
     this.checkBounds = function () {
         if (this.x + this.width >= this.canvasWidth) {
-            console.log(this);
             game.InvaderCollection.change = true;
         } else if (this.x <= 0) {
-            console.log(this);
-            this.x = 0;
             game.InvaderCollection.change = true;
         }
     };
@@ -297,7 +311,6 @@ function Game() {
         
         //Test to see if background is even supported
         if (this.bgCanvas.getContext) {
-            
             this.bgContext = this.bgCanvas.getContext('2d');
             this.playerContext = this.playerCanvas.getContext('2d');
             this.invaderContext = this.invaderCanvas.getContext('2d');
@@ -321,13 +334,17 @@ function Game() {
             this.player.width = imageRepo.player.width;
             
             Invader.prototype.context = this.invaderContext;
-            //Invader.prototype.context.scale(2.0, 2.0);
             Invader.prototype.canvasWidth = this.width;
             Invader.prototype.canvasHeight = this.height;
             
             this.InvaderCollection = new InvaderCollection();
             this.InvaderCollection.init(0, 0);
             this.InvaderCollection.generateInvaders();
+            
+            this.vericalLine = new VertScan();
+            this.vericalLine.init(0, 0);
+            this.vericalLine.canvasWidth = this.width;
+            this.vericalLine.canvasHeight = this.height;
             
             return true;
         } else {
@@ -340,6 +357,25 @@ function Game() {
     };
 }
 
+function resize() {
+    'use strict';
+    var view = Array.from(document.querySelectorAll('canvas')),
+        w = window.innerWidth,
+        h = window.innerHeight,
+        ratio = (view[0].style.height / view[0].style.width),
+        i = 0;
+    
+    console.log(h);
+    console.log(w);
+    console.log(view[0].style.width);
+    
+    for (i = 0; i < view.length; ++i) {
+        view[i].style.width = (ratio * w) + 'px';
+        view[i].style.height = ((1 / ratio) * h) + 'px';
+    }
+}
+
+
 /**
  * Game start
  */
@@ -349,6 +385,7 @@ function init() {
     'use strict';
     if (game.init()) {
         game.start();
+        resize();
     }
 }
 
