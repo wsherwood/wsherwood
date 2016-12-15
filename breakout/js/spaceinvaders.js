@@ -24,6 +24,7 @@ function animate() {
         window.requestAnimFrame(animate);
         game.background.draw();
         game.player.draw();
+        game.player.bullet.draw();
         game.InvaderCollection.draw();
     } else {
         return;
@@ -147,9 +148,31 @@ function VertScan() {
 }
 VertScan.prototype = new Drawable();
 
+function Bullet() {
+    'use strict';
+    this.speed = 1;
+    this.width = 5;
+    this.height = 13;
+    this.isAlive = false;
+    this.color = "#ff0000";
+    this.draw = function () {
+        if (this.isAlive) {
+            this.context.clearRect(this.x, this.y, this.width, this.height);
+            this.y -= this.speed;
+            this.context.fillStyle= this.color;
+            this.context.fillRect(this.x, this.y, this.width, this.height);
+            if (this.y + this.height <= 0) {
+                this.isAlive = false;
+            }
+        }
+    };
+}
+Bullet.protoype = new Drawable();
+
 function Player() { //inherits from drawable
     'use strict';
     this.speed = 1;
+    this.bullet = new Bullet(0, 0);
     this.isLeft = false;
     this.isRight = false;
     
@@ -173,6 +196,11 @@ function Player() { //inherits from drawable
     
     // Shooting logic
     this.fire = function () {
+        if (!this.bullet.isAlive) {
+            this.bullet.x = this.x + (this.width / 2);
+            this.bullet.y = game.invaderCanvas.height - this.canvasHeight - this.bullet.height;
+            this.bullet.isAlive = true;
+        }
     };
     
     // Player boundry logic.
@@ -241,17 +269,24 @@ function InvaderCollection() {
     };
     
     this.invaders = this.generateInvaders();
-    
+    this.remainingInvaders = this.invaders.length;
+    this.numberOfCalls = 0;
     this.draw = function () {
-        game.invaderContext.clearRect(0, 0, game.invaderCanvas.width, game.invaderCanvas.height);
-        for (i = 0; i < this.invaders.length; i++) {
-            this.invaders[i].draw();
+        this.numberOfCalls += 1;
+        
+        // Determine whether or not to update the invaders based
+        // on the number of currently alive
+        if (this.numberOfCalls % this.remainingInvaders === 0) {
+            game.invaderContext.clearRect(0, 0, game.invaderCanvas.width, game.invaderCanvas.height);
+            for (i = 0; i < this.invaders.length; i++) {
+                this.invaders[i].draw();
+            }
+            if (this.change) {
+                this.changeDirection();
+                this.change = false;
+            }
+            //inv.checkBounds();
         }
-        if (this.change) {
-            this.changeDirection();
-            this.change = false;
-        }
-        //inv.checkBounds();
     };
     
     this.changeDirection = function () {
@@ -340,6 +375,10 @@ function Game() {
             this.InvaderCollection = new InvaderCollection();
             this.InvaderCollection.init(0, 0);
             this.InvaderCollection.generateInvaders();
+            
+            Bullet.prototype.context = this.invaderContext;
+            Bullet.prototype.canvasWidth = this.width;
+            Bullet.prototype.canvasHeigh = this.height;
             
             this.vericalLine = new VertScan();
             this.vericalLine.init(0, 0);
