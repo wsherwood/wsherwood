@@ -233,7 +233,7 @@ var spaceInvaders = (function () {
 
                 Player.prototype.context = this.playerContext;
                 Player.prototype.canvasWidth = this.playerCanvas.width;
-                Player.prototype.canvasHeight = this.playerCanvas.height;
+      2          Player.prototype.canvasHeight = this.playerCanvas.height;
 
                 this.player = new Player();
                 this.player.init(0, 0);
