@@ -15,6 +15,7 @@ window.requestAnimFrame = (function () {
 }());
 
 var game;
+var imageRepo = new ImageRepo();
 /***
  * Animation loop.
  */
@@ -25,111 +26,12 @@ function animate() {
         game.background.draw();
         game.player.draw();
         game.player.bullet.draw();
+        game.InvaderCollection.checkCollision();
         game.InvaderCollection.draw();
     } else {
         return;
     }
 }
-
-
-/**
-  * Image repo. Load in all the graphical assest initially
-  * in order to lower the overhead during the game.
-  * Is a singleton pattern... sort of...
-  */
-var imageRepo = (function () {
-    'use strict';
-    
-    // "Private" variables
-    var empty = null,
-        bg = new Image(),
-        py = new Image(),
-        inv = new Image();
-    
-    //Background property
-    
-    //Source file
-    bg.src = "bg.png";
-    py.src = "ship.png";
-    inv.src = "invader2.png";
-
-    
-    function addImg(imgName, srcPath) {
-        imageRepo[imgName.toString()] = new Image();
-        imageRepo[imgName.toString()].src = srcPath.toString();
-    }
-    
-    return { // public interface
-        background: bg,
-        player: py,
-        invader: inv,
-        getImage: function (name) {
-            if (imageRepo[name]) {
-                return imageRepo[name];
-            }
-        },
-        add: function (name, src) {
-            addImg(name, src);
-            return;
-        }
-    };
-}());
-
-/**
- * Drawable object prototype. The effective 'base' class
- * for all the objects that can or will be drawn on a canvas
- * element.
- */
-function Drawable() {
-    'use strict';
-
-    //Constructor
-    this.init = function (posX, posY) {
-        //Default variables
-        this.x = posX;
-        this.y = posY;
-    };
-    this.speed = 0;
-    this.canvasWidth = 0;
-    this.canvasHeight = 0;
-    this.width = 0;
-    this.height = 0;
-    this.id = null;
-    
-    //Abstract fucntion to be overridden.
-    this.draw = function () {};
-}
-
-/** 
- * Concrete background class object. Inherits from drawable
- * drawn on it's own canvas.
- */
-function Background() { //inherits from drawable
-    'use strict';
-    this.speed = 1; // move speed in px
-    
-    //Implementation of the draw code
-    this.draw = function () {
-        try {
-            this.y += this.speed;
-            this.context.drawImage(imageRepo.background, this.x, this.y);
-            //Draw a dupelicate image on top for the infinite scrolling effect
-            // TODO: CHANGE THE BACKGROUND SCROLLING LOGIC. 
-            // PERHAPS CREATE A SCROLLABLE PROTOTYPE AS WELL AS A METHOD FOR WINDOW RESIZE
-            this.context.drawImage(imageRepo.background, this.x, this.y - imageRepo.background.height);
-
-            //When the image gets scrolled off the screen. Move it to the top.
-            if (this.y >= this.canvasHeight) {
-                this.y = 0 - (imageRepo.background.height - this.canvasHeight); // This should work for any image size
-            }
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
-}
-
-//Set the background ot inherit properties from Drawable
-Background.prototype = new Drawable();
 
 function VertScan() {
     'use strict';
@@ -147,158 +49,6 @@ function VertScan() {
     };
 }
 VertScan.prototype = new Drawable();
-
-function Bullet() {
-    'use strict';
-    this.speed = 1;
-    this.width = 5;
-    this.height = 13;
-    this.isAlive = false;
-    this.color = "#ff0000";
-    this.draw = function () {
-        if (this.isAlive) {
-            this.context.clearRect(this.x, this.y, this.width, this.height);
-            this.y -= this.speed;
-            this.context.fillStyle= this.color;
-            this.context.fillRect(this.x, this.y, this.width, this.height);
-            if (this.y + this.height <= 0) {
-                this.isAlive = false;
-            }
-        }
-    };
-}
-Bullet.protoype = new Drawable();
-
-function Player() { //inherits from drawable
-    'use strict';
-    this.speed = 1;
-    this.bullet = new Bullet(0, 0);
-    this.isLeft = false;
-    this.isRight = false;
-    
-    //Draw code implementataion
-    this.draw = function () {
-        if (this.isLeft) {
-            this.x -= this.speed;
-        }
-        
-        if (this.isRight) {
-            this.x += this.speed;
-        }
-        this.checkBounds();
-        this.context.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-        try {
-            this.context.drawImage(imageRepo.player, this.x, this.y);
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
-    
-    // Shooting logic
-    this.fire = function () {
-        if (!this.bullet.isAlive) {
-            this.bullet.x = this.x + (this.width / 2);
-            this.bullet.y = game.invaderCanvas.height - this.canvasHeight - this.bullet.height;
-            this.bullet.isAlive = true;
-        }
-    };
-    
-    // Player boundry logic.
-    this.checkBounds = function () {
-        if (this.x <= 0) {
-            this.x = 0;
-        } else if (this.x + this.width >= this.canvasWidth) {
-            this.x = this.canvasWidth - this.width;
-        }
-    };
-    
-}
-Player.prototype = new Drawable();
-
-function Invader() {
-    'use strict';
-    this.speed = 1;
-    this.width = imageRepo.invader.width;
-    
-    this.draw = function () {
-        try {
-            this.x += this.speed;
-            this.context.drawImage(imageRepo.invader, this.x, this.y);
-            this.checkBounds();
-        } catch (err) {
-            console.log(err.message);
-        }
-    };
-    
-    this.checkBounds = function () {
-        if (this.x + this.width >= this.canvasWidth) {
-            game.InvaderCollection.change = true;
-        } else if (this.x <= 0) {
-            game.InvaderCollection.change = true;
-        }
-    };
-}
-Invader.prototype = new Drawable();
-
-function InvaderCollection() {
-    'use strict';
-    this.speed = 10;
-    this.isRight = true;
-    this.instance = false;
-    this.change = false;
-    var i = 0;
-    
-    this.generateInvaders = function () {
-        if (InvaderCollection.instance) {
-            return InvaderCollection.invaders;
-        }
-        
-        var invArr = [],
-            i = 0;
-        invArr.length = 55;
-
-        for (i = 0; i < invArr.length; i += 1) {
-            invArr[i] = new Invader();
-            invArr[i].init((i % 11 * (invArr[i].width + 5) + 14), (Math.floor(i / 11) * 22) + 32);
-            invArr[i].id = 'inv' + i;
-            //console.log(invArr[i].x + " " + invArr[i].y);
-        }
-        
-        InvaderCollection.instance = true;
-        return invArr;
-    };
-    
-    this.invaders = this.generateInvaders();
-    this.remainingInvaders = this.invaders.length;
-    this.numberOfCalls = 0;
-    this.draw = function () {
-        this.numberOfCalls += 1;
-        
-        // Determine whether or not to update the invaders based
-        // on the number of currently alive
-        if (this.numberOfCalls % this.remainingInvaders === 0) {
-            game.invaderContext.clearRect(0, 0, game.invaderCanvas.width, game.invaderCanvas.height);
-            for (i = 0; i < this.invaders.length; i++) {
-                this.invaders[i].draw();
-            }
-            if (this.change) {
-                this.changeDirection();
-                this.change = false;
-            }
-            //inv.checkBounds();
-        }
-    };
-    
-    this.changeDirection = function () {
-        for (i = 0; i < this.invaders.length; i++) {
-            this.invaders[i].speed = -this.invaders[i].speed;
-            this.invaders[i].y += game.InvaderCollection.speed;
-        }
-    };
-    
-}
-InvaderCollection.prototype = new Drawable();
-
 
 /***
  * Game object. Holds the objects and data for the game.
@@ -403,10 +153,6 @@ function resize() {
         h = window.innerHeight,
         ratio = (view[0].style.height / view[0].style.width),
         i = 0;
-    
-    console.log(h);
-    console.log(w);
-    console.log(view[0].style.width);
     
     for (i = 0; i < view.length; ++i) {
         view[i].style.width = (ratio * w) + 'px';
