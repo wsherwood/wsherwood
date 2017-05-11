@@ -1,0 +1,54 @@
+[
+  [0][0][0][0]
+  [0][0][0][0]
+] Game state where [0] indicates
+  a face down card.
+  
+[
+  [1][0][0][0]
+  [0][0][0][0]
+] The first card has been flipped.
+
+[
+  [1][1][0][0]
+  [0][1][0][0]
+] Can you tell which cards have been
+  matched or are currently selected.
+
+Need more information in the game state
+[
+  card1: []
+  card2: []
+  numberMatch: 1
+  [1][1][0][0]
+  [0][1][0][0]
+]
+
+
+A more detailed looked
+[
+  card1: cards[5] // this is a reference to card stored at index 5
+  card2: []       // indicated that a second card hasn't been picked
+  numberMatches: 1
+  
+  cards: [        // an array of card objects
+    [1][1][0][0]
+    [0][1][0][0]
+  ]
+  
+]
+
+What we will build
+[
+  card1: []
+  card2: []
+  numberMatches: 
+  
+  
+]
+
+A potential card state 
+[
+  value: '7';
+  flipped: true; //or 1
+]

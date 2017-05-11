@@ -1,15 +1,8 @@
-* { box-sizing: border-box; }
+* { box-sizing: border-box; padding:0; margin: 0 }
 
 body {
     direction: ltr;
-}
-
-#background_div {
-    background-color: darkslateblue;
-    
-}
-
-footer ul{
+    background: url(../img/gridpaperlightbluepattern.png), lightblue;
 }
 
 footer ul li{
@@ -21,11 +14,9 @@ ul{
 	list-style-type: none;
 }
 
-/*------------ untested -------------*/
 header{ 
 	text-transform: uppercase;
-	letter-spacing: 0.4em;
-    background-color: antiquewhite;
+    background-color: rgba(100,100,100, 0.5);
     text-decoration: none;
     display: flex;
     justify-content: space-around;
@@ -33,6 +24,7 @@ header{
     align-items: center;
     flex-wrap: nowrap;
     width: 100%;
+  height: 3.5em;
 }
 
 header h1{
@@ -40,51 +32,72 @@ header h1{
     margin-left:right;
     flex: 2;
 }
-
 nav {
+    margin-left:10%;
     flex: 3;
-}
-
-nav ul{
 }
 nav li{
     display: inline;
 }
 nav a{
-    text-decoration: none;
+  font-weight: 600;
+  color:white;
+  text-decoration: none;
 }
 
-
-/*---------- OO styled selector ------*/
-
-
-.main .content{
-	border-radius: 5px;
+.main_content{
+  font-size: 1.2em;
 	background-color: rgb(220,220,220);
-	width: 66.66%;
+	padding:0 15% 0 20%;
 	margin: auto;
-    display: flex;
-    box-shadow: 0px 20px 30px #555;
+    box-shadow: 1px 2px 1px #555;
 }
 
-.main .content .panels{
-	margin: 25px;
+.about_me.photobox{
+    max-width: 340px;
+    float: left;
+    align-content: center;
+}
+.about_me.blurb {
+    width: 70%;
+    color:#333;
+    margin: auto;
+    line-height: 0.8em;
+    font-size: 0.8em;
+    text-align: center;
+}
+.photo {
+    background: #f3efe7;
+    min-width: 150px;
+    max-width: 70%;
+    margin: 0 40px;
+    padding: 9px;
+    border: solid 1px #ebe6e0;
+    border-bottom: solid 1px #d6ccc2;
+    border-radius: 4px;
+}
+.contact_form {
+  background: white;
+  padding-left: 10%;
+  width: 100%;
 }
 
-.panel{
-    flex: 1;
-	text-align: center;
-
+.contact_form-line{
+  margin: 5px 0;
+  padding: 0 0 .5em;
+  max-width: 400px;
+  text-align: left;
+  clear:both;
 }
 
-.red.panel{
-	background-color: rgb(220,170,170);
+.contact_form-line label{
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1.5em;
+  font-weight: normal;
 }
 
-.blue.panel{
-	background-color: rgb(170,170,220);
-}
-
-.blue.panel{
-	background-color: rgb(170,220,170);
+.contact_form-line::after{
+  clear: both;
+  padding: 10px;
 }

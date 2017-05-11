@@ -1,0 +1,15 @@
+function shuffle(arr) {
+    var i, k, t = 0;
+    
+    for (i = arr.length - 1; i > 0; i -= 1) {
+      k = Math.floor(Math.random() * i);
+      
+      //swap position
+      t = arr[i];
+      arr[i] = arr[k];
+      arr[k] = t;
+    }
+};
+
+function Card() {
+}

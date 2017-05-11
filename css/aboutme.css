@@ -32,43 +32,4 @@ ul{
 	list-style-type: none;
 }
 
-/*------------ untested -------------*/
-nav {
-    flex: 3;
-}
-nav ul{
-    border-bottom: 1px solid;
-}
-nav li{
-    border-top-left-radius: 3%;
-    display: inline-block;
-}
-nav a{
-    text-decoration: none;
-}
-
-
 /*---------- OO styled selector ------*/
-.about_me.photobox{
-    max-width: 340px;
-    float: left;
-    align-content: center;
-}
-.about_me.blurb {
-    width: 70%;
-    color:#333;
-    margin: auto;
-    line-height: 0.8em;
-    font-size: 0.8em;
-    text-align: center;
-}
-.photo {
-    background: #f3efe7;
-    min-width: 150px;
-    max-width: 70%;
-    margin: 0 40px;
-    padding: 9px;
-    border: solid 1px #ebe6e0;
-    border-bottom: solid 1px #d6ccc2;
-    border-radius: 4px;
-}

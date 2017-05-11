@@ -1,0 +1,56 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+header {
+  margin: auto;
+  padding: 1em 0.5em;
+  text-align: center;
+}
+.concentrationgame {
+  width: 70%;
+  margin: auto;
+}
+
+.outer_card,
+.inner_card {
+  transition: transform 0.3s, background 0.3s;
+}
+.outer_card {
+  backface-visibility: visible;
+  margin: 0.1em;
+  float: left;
+  padding: 5px;
+  width: 286px;
+  height: 395px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner_card {
+  backface-visibility: hidden;
+  border: 5px solid black;
+  width: 90%;
+  background-color: rgba(230, 230, 230, 0.7);
+  font-size: 12em;
+  transform: rotateY(-180deg) scaleX(-1);
+}
+
+.outer_card.selected {
+  transform: rotateY(-180deg);
+}
+
+.selected > img {
+  transform: rotateY(0deg) scaleX(-1);
+}
+
+.matched {
+  transform: rotateY(-180deg);
+  background: rgba(0, 0, 200, 0.3);
+}
+.matched > img {
+  transform: rotateY(0deg) scaleX(-1);
+}
